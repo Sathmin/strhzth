@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FB Video Downloader | Download Facebook Videos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        .download-btn {
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .quality-btn {
+            transition: all 0.2s ease;
+        }
+        .quality-btn:hover {
+            transform: scale(1.03);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fab fa-facebook-square text-3xl"></i>
+                    <h1 class="text-2xl font-bold">FB Video Downloader</h1>
+                </div>
+                <div class="hidden md:flex space-x-4">
+                    <a href="#" class="hover:text-gray-200 transition">Home</a>
+                    <a href="#" class="hover:text-gray-200 transition">How to Use</a>
+                    <a href="#" class="hover:text-gray-200 transition">FAQ</a>
+                </div>
+                <button class="md:hidden text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Download Facebook Videos in HD Quality</h2>
+            <p class="text-lg text-gray-600">Paste the URL of any Facebook video below to download it in multiple quality options.</p>
+        </div>
+
+        <!-- URL Input Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-3xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-4">
+                <input 
+                    type="text" 
+                    id="videoUrl" 
+                    placeholder="Paste Facebook video URL here..." 
+                    class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                <button 
+                    id="downloadBtn" 
+                    class="download-btn gradient-bg text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                >
+                    <i class="fas fa-download"></i>
+                    <span>Download</span>
+                </button>
+            </div>
+            <div class="mt-4 text-sm text-gray-500 flex items-center">
+                <i class="fas fa-info-circle mr-2"></i>
+                <span>Works with public Facebook videos, reels, and stories</span>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="max-w-3xl mx-auto mb-12">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">How to Download Facebook Videos</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white mb-4 mx-auto">
+                        <i class="fas fa-link text-xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-lg mb-2 text-center">1. Copy Video URL</h4>
+                    <p class="text-gray-600 text-center">Copy the link of the Facebook video you want to download</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white mb-4 mx-auto">
+                        <i class="fas fa-paste text-xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-lg mb-2 text-center">2. Paste URL</h4>
+                    <p class="text-gray-600 text-center">Paste the URL in the input field above</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white mb-4 mx-auto">
+                        <i class="fas fa-download text-xl"></i>
+                    </div>
+                    <h4 class="font-semibold text-lg mb-2 text-center">3. Download</h4>
+                    <p class="text-gray-600 text-center">Click download and choose your preferred quality</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section (Initially Hidden) -->
+        <div id="resultsSection" class="max-w-3xl mx-auto hidden">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="gradient-bg text-white px-6 py-4">
+                    <h3 class="text-xl font-semibold flex items-center">
+                        <i class="fas fa-video mr-3"></i>
+                        <span>Available Download Options</span>
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div id="videoInfo" class="flex items-start mb-6">
+                        <div class="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden mr-4">
+                            <img id="videoThumbnail" src="https://via.placeholder.com/100" alt="Video thumbnail" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 id="videoTitle" class="font-semibold text-lg mb-1">Facebook Video</h4>
+                            <p id="videoDuration" class="text-gray-600 text-sm">Duration: 0:00</p>
+                        </div>
+                    </div>
+                    
+                    <div id="qualityOptions" class="space-y-3">
+                        <!-- Quality options will be added here dynamically -->
+                        <div class="animate-pulse text-center py-8">
+                            <i class="fas fa-spinner fa-spin text-3xl text-blue-500 mb-2"></i>
+                            <p>Fetching video information...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="max-w-3xl mx-auto mt-16">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-6">Frequently Asked Questions</h3>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-lg shadow-md">
+                    <h4 class="font-semibold text-lg mb-2 flex items-center">
+                        <i class="fas fa-question-circle text-blue-500 mr-2"></i>
+                        Is this service free to use?
+                    </h4>
+                    <p class="text-gray-600">Yes, our Facebook video downloader is completely free to use with no hidden charges.</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-md">
+                    <h4 class="font-semibold text-lg mb-2 flex items-center">
+                        <i class="fas fa-question-circle text-blue-500 mr-2"></i>
+                        What video formats are supported?
+                    </h4>
+                    <p class="text-gray-600">We support downloading videos in MP4 format with various quality options including HD and SD.</p>
+                </div>
+                <div class="bg-white p-5 rounded-lg shadow-md">
+                    <h4 class="font-semibold text-lg mb-2 flex items-center">
+                        <i class="fas fa-question-circle text-blue-500 mr-2"></i>
+                        Can I download private videos?
+                    </h4>
+                    <p class="text-gray-600">No, our service only works with public Facebook videos that are accessible without login.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold flex items-center">
+                        <i class="fab fa-facebook-square mr-2"></i>
+                        FB Video Downloader
+                    </h3>
+                    <p class="text-gray-400 mt-2">The easiest way to download Facebook videos</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                <p>© 2023 FB Video Downloader. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadBtn = document.getElementById('downloadBtn');
+            const videoUrlInput = document.getElementById('videoUrl');
+            const resultsSection = document.getElementById('resultsSection');
+            const qualityOptions = document.getElementById('qualityOptions');
+            const videoTitle = document.getElementById('videoTitle');
+            const videoDuration = document.getElementById('videoDuration');
+            const videoThumbnail = document.getElementById('videoThumbnail');
+
+            // API endpoint - replace with your actual API endpoint
+            const API_ENDPOINT = 'https://your-api-endpoint.com/download';
+            // API key - replace with your actual API key
+            const API_KEY = 'your_api_key_here';
+
+            downloadBtn.addEventListener('click', async function() {
+                const videoUrl = videoUrlInput.value.trim();
+                
+                if (!videoUrl) {
+                    showAlert('Please enter a Facebook video URL', 'error');
+                    return;
+                }
+
+                if (!isValidFacebookUrl(videoUrl)) {
+                    showAlert('Please enter a valid Facebook video URL', 'error');
+                    return;
+                }
+
+                // Show loading state
+                downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span> Processing...</span>';
+                downloadBtn.classList.add('opacity-75');
+                
+                try {
+                    // In a real implementation, you would call your API here
+                    // For demo purposes, we'll simulate an API response
+                    const response = await fetchVideoInfo(videoUrl);
+                    
+                    // Update UI with video info
+                    videoTitle.textContent = response.title || 'Facebook Video';
+                    videoDuration.textContent = `Duration: ${response.duration || '0:00'}`;
+                    videoThumbnail.src = response.thumbnail || 'https://via.placeholder.com/100';
+                    
+                    // Clear existing quality options
+                    qualityOptions.innerHTML = '';
+                    
+                    // Add quality options
+                    response.qualities.forEach(quality => {
+                        const qualityOption = document.createElement('div');
+                        qualityOption.className = 'quality-btn bg-gray-50 hover:bg-gray-100 p-4 rounded-lg flex justify-between items-center cursor-pointer';
+                        qualityOption.innerHTML = `
+                            <div class="flex items-center">
+                                <i class="fas fa-film text-blue-500 mr-3"></i>
+                                <div>
+                                    <h5 class="font-medium">${quality.quality}</h5>
+                                    <p class="text-sm text-gray-500">${quality.format} • ${quality.size}</p>
+                                </div>
+                            </div>
+                            <a href="${quality.url}" class="download-link bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                                <i class="fas fa-download mr-1"></i> Download
+                            </a>
+                        `;
+                        qualityOptions.appendChild(qualityOption);
+                    });
+                    
+                    // Show results section
+                    resultsSection.classList.remove('hidden');
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert('Failed to fetch video information. Please try again.', 'error');
+                } finally {
+                    // Reset button state
+                    downloadBtn.innerHTML = '<i class="fas fa-download"></i><span> Download</span>';
+                    downloadBtn.classList.remove('opacity-75');
+                }
+            });
+
+            // Function to validate Facebook URLs
+            function isValidFacebookUrl(url) {
+                const facebookRegex = /(?:https?:\/\/)?(?:www\.)?(?:facebook\.com|fb\.watch)\/(?:[a-zA-Z0-9\.]+\/)?(?:video\.php\?v=\d+|[\w\.]+\/videos\/\d+|\w+\/videos\/\d+|\w+\/reel\/\d+)/;
+                return facebookRegex.test(url);
+            }
+
+            // Function to show alert messages
+            function showAlert(message, type = 'success') {
+                // In a real implementation, you might want to show a nice toast notification
+                alert(`${type === 'error' ? 'Error' : 'Success'}: ${message}`);
+            }
+
+            // Mock function to simulate API call
+            async function fetchVideoInfo(url) {
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Mock response - replace with actual API call in production
+                return {
+                    success: true,
+                    title: "Sample Facebook Video",
+                    duration: "2:45",
+                    thumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+                    qualities: [
+                        {
+                            quality: "HD 1080p",
+                            format: "MP4",
+                            size: "12.5 MB",
+                            url: "#"
+                        },
+                        {
+                            quality: "HD 720p",
+                            format: "MP4",
+                            size: "8.2 MB",
+                            url: "#"
+                        },
+                        {
+                            quality: "SD 480p",
+                            format: "MP4",
+                            size: "4.7 MB",
+                            url: "#"
+                        },
+                        {
+                            quality: "Low Quality",
+                            format: "MP4",
+                            size: "2.1 MB",
+                            url: "#"
+                        }
+                    ]
+                };
+                
+                // In a real implementation, you would make an actual API call:
+                /*
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({ url: videoUrl })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+                
+                return await response.json();
+                */
+            }
+        });
+    </script>
+</body>
+</html>
